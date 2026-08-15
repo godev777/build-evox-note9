@@ -1,0 +1,64 @@
+name: Build Evolution X (Note 9)
+
+# Ini memastikan skrip hanya berjalan kalau kamu menekan tombol "Run" secara manual
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build ROM
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: 1. Kosongkan Ruang Penyimpanan Server (Wajib)
+        uses: easimon/maximize-build-space@master
+        with:
+          root-reserve-mb: 512
+          swap-size-mb: 8192
+          remove-dotnet: 'true'
+          remove-android: 'true'
+          remove-haskell: 'true'
+          remove-codeql: 'true'
+          remove-docker-images: 'true'
+
+      - name: 2. Tarik File dari Repository Ini
+        uses: actions/checkout@v3
+
+      - name: 3. Instal Dependensi Ubuntu
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git-core gnupg flex bison build-essential zip curl zlib1g-dev gcc-multilib g++-multilib libc6-dev-i386 lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z1-dev libgl1-mesa-dev libxml2-utils xsltproc unzip fontconfig
+
+      - name: 4. Instal Tool 'Repo'
+        run: |
+          mkdir -p ~/bin
+          curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+          chmod a+x ~/bin/repo
+          sudo cp ~/bin/repo /usr/local/bin/repo
+
+      - name: 5. Inisialisasi & Sinkronisasi Source Code
+        run: |
+          mkdir -p ~/workspace
+          cd ~/workspace
+          # Mengunduh manifest Evolution X (Kita set ke Android 14 / branch 'vic')
+          repo init -u https://github.com/Evolution-X/manifest -b vic --depth=1
+          
+          # Menyalin roomservice.xml milikmu ke dalam folder manifest lokal
+          mkdir -p .repo/local_manifests
+          cp ${{ github.workspace }}/roomservice.xml .repo/local_manifests/
+          
+          # Mulai mengunduh ratusan GB source code (bisa memakan waktu 30-60 menit)
+          repo sync -c --no-clone-bundle --no-tags --optimized-fetch --prune --force-sync -j8
+
+      - name: 6. Mulai Kompilasi ROM (Mka)
+        run: |
+          cd ~/workspace
+          source build/envsetup.sh
+          lunch evolution_crownlte-userdebug
+          mka evolution
+
+      - name: 7. Upload Hasil Build (.zip)
+        uses: actions/upload-artifact@v3
+        with:
+          name: ROM-EvolutionX-crownlte
+          path: ~/workspace/out/target/product/crownlte/EvolutionX*.zip
