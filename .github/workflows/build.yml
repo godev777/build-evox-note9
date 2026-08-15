@@ -58,7 +58,7 @@ jobs:
           mka evolution
 
       - name: 7. Upload Hasil Build (.zip)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ROM-EvolutionX-crownlte
           path: ~/workspace/out/target/product/crownlte/EvolutionX*.zip
