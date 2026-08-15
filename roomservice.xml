@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+    <!-- Mendaftarkan Remote GitHub ExyHyperBrick -->
+    <remote name="exyhyper" fetch="https://github.com/ExyHyperBrick" />
+
+    <!-- Device Tree Note 9 (crownlte) -->
+    <project path="device/samsung/crownlte" 
+             name="android_device_samsung_crownlte" 
+             remote="exyhyper" 
+             revision="lineage-23.2" />
+
+    <!-- Device Tree Common -->
+    <project path="device/samsung/universal9810-common" 
+             name="android_device_samsung_universal9810-common" 
+             remote="exyhyper" 
+             revision="lineage-23.2" />
+
+    <!-- Vendor Tree Note 9 -->
+    <project path="vendor/samsung/crownlte" 
+             name="android_vendor_samsung_crownlte" 
+             remote="exyhyper" 
+             revision="lineage-23.2" />
+
+    <!-- Vendor Tree Common -->
+    <project path="vendor/samsung/universal9810-common" 
+             name="android_vendor_samsung_universal9810-common" 
+             remote="exyhyper" 
+             revision="lineage-23.2" />
+
+    <!-- Kernel Source Code Exynos 9810 -->
+    <project path="kernel/samsung/exynos9810" 
+             name="android_kernel_samsung_exynos9810" 
+             remote="exyhyper" 
+             revision="lineage-23.2" />
+
+    <!-- Hardware Samsung -->
+    <project path="hardware/samsung" 
+             name="android_hardware_samsung" 
+             remote="exyhyper" 
+             revision="lineage-23.2" />
+</manifest>
