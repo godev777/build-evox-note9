@@ -1,6 +1,5 @@
 name: Build Evolution X (Note 9)
 
-# Ini memastikan skrip hanya berjalan kalau kamu menekan tombol "Run" secara manual
 on:
   workflow_dispatch:
 
@@ -22,7 +21,7 @@ jobs:
           remove-docker-images: 'true'
 
       - name: 2. Tarik File dari Repository Ini
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: 3. Instal Dependensi Ubuntu
         run: |
@@ -40,14 +39,15 @@ jobs:
         run: |
           mkdir -p ~/workspace
           cd ~/workspace
-          # Mengunduh manifest Evolution X (Kita set ke Android 14 / branch 'vic')
+          
+          # Mengunduh manifest Evolution X (Android 14 / vic)
           repo init -u https://github.com/Evolution-X/manifest -b vic --depth=1
           
-          # Menyalin roomservice.xml milikmu ke dalam folder manifest lokal
+          # Menyalin roomservice.xml ke dalam folder manifest lokal
           mkdir -p .repo/local_manifests
           cp ${{ github.workspace }}/roomservice.xml .repo/local_manifests/
           
-          # Mulai mengunduh ratusan GB source code (bisa memakan waktu 30-60 menit)
+          # Mulai mengunduh ratusan GB source code (Proses ini butuh kesabaran)
           repo sync -c --no-clone-bundle --no-tags --optimized-fetch --prune --force-sync -j8
 
       - name: 6. Mulai Kompilasi ROM (Mka)
